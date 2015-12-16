@@ -1,0 +1,5 @@
+= grid_runner
+
+Generate this with
+    grid_runner rdoc
+After you have described your command line interface
