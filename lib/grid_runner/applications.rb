@@ -1,4 +1,6 @@
 module Applications
+  class App < Struct.new(:name, :cmd, :status, :pid); end
+
   def self.get_all
     procfile = File.open(Dir.pwd + "/Procfile")
     applications = procfile.map do |line|
@@ -14,12 +16,7 @@ module Applications
             proc_status = :not_running
          end         
        end
-      {
-        name: name,
-        cmd: cmd,
-        status: proc_status,
-        pid: pid
-      }
+      App.new(name, cmd, proc_status, pid)
     end
   end
 end

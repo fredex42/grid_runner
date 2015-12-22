@@ -45,6 +45,38 @@ command :run do |c|
   end
 end
 
+desc 'Describe restart'
+arg_name "app names separated by a SPACE or 'all'" 
+command :restart do |c|
+  c.action do |global_options,options,args|
+    if args.first == "all"
+      apps = Applications.get_all
+    elsif args.first
+      apps = Applications.get_all.select { |a| args.include?( a[:name] ) }
+    end
+    colors = COLORS.shuffle
+    apps.each do |app|
+      puts "No app with that name found" and return unless app
+      puts Rainbow("#{app[:name]} ").send(colors.rotate!.first) 
+      puts "status: #{app[:status]}"
+      # puts "pid: #{app[:pid]}"
+      begin
+        if app[:status] == :running
+          Process.kill("HUP", app[:pid].to_i)
+          puts "kilt #{app[:name]}"
+        end
+      ensure
+        stdout, stderr, cmd_status = Open3.capture3(app[:cmd])        
+        if cmd_status.success?
+          puts "running: #{app[:name]}"
+        end
+      end
+    end
+
+    puts "restart command ran"
+  end
+end
+
 desc 'Describe status here'
 arg_name 'Describe arguments to status here'
 command :status do |c|

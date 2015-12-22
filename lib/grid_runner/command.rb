@@ -11,5 +11,6 @@ module Command
       STDERR.puts("Error running: #{cmd}")
       false
     end
+    return status
   end
 end
