@@ -3,11 +3,10 @@ require File.join([File.dirname(__FILE__),'lib','grid_runner','version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'grid_runner'
   s.version = GridRunner::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
+  s.author = 'NickyPStraightStylinOnEm'
+  s.email = 'np1249a@gmail.com'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'A description of your project'
+  s.summary = 'A lil appy to run them small apz'
   s.files = `git ls-files`.split("
 ")
   s.require_paths << 'lib'

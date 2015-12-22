@@ -18,6 +18,11 @@ arguments :strict
 # arg_name 'The name of the argument'
 # flag [:f,:flagname]
 
+def apps_from_args(args)
+  return App.all if args.first == "all"
+  return App.find(args) if args.first
+end
+
 desc 'Describe run'
 arg_name 'Describe arguments to run here'
 command :run do |c|
@@ -25,23 +30,9 @@ command :run do |c|
   c.default_value 'default'
   c.flag :f
   c.action do |global_options,options,args|
-    if args.first == "all"
-      apps = Applications.get_all
-    elsif args.first
-      apps = Applications.get_all.select { |a| args.include?( a[:name] ) }
+    apps_from_args(args).each do |app|
+      app.run
     end
-
-    puts apps.map {|a| a[:name] }
-    apps.each do |a|
-      fork do 
-        stdout, stderr, cmd_status = Open3.capture3(a[:cmd])
-        if cmd_status.success?
-          puts "running: #{name}"
-        end
-      end
-    end
-
-    puts "run command ran"
   end
 end
 
@@ -49,27 +40,19 @@ desc 'Describe restart'
 arg_name "app names separated by a SPACE or 'all'" 
 command :restart do |c|
   c.action do |global_options,options,args|
-    if args.first == "all"
-      apps = Applications.get_all
-    elsif args.first
-      apps = Applications.get_all.select { |a| args.include?( a[:name] ) }
-    end
     colors = COLORS.shuffle
-    apps.each do |app|
+    apps_from_args(args).each do |app|
       puts "No app with that name found" and return unless app
-      puts Rainbow("#{app[:name]} ").send(colors.rotate!.first) 
-      puts "status: #{app[:status]}"
-      # puts "pid: #{app[:pid]}"
+      puts Rainbow("#{app.name} ").send(colors.rotate!.first) 
+      puts "status: #{app.status}"
+      # puts "pid: #{app.pid}"
       begin
-        if app[:status] == :running
-          Process.kill("HUP", app[:pid].to_i)
-          puts "kilt #{app[:name]}"
+        if app.status == :running
+          Process.kill("HUP", app.pid.to_i)
+          puts "kilt #{app.name}"
         end
       ensure
-        stdout, stderr, cmd_status = Open3.capture3(app[:cmd])        
-        if cmd_status.success?
-          puts "running: #{app[:name]}"
-        end
+        app.run
       end
     end
 
@@ -77,26 +60,13 @@ command :restart do |c|
   end
 end
 
-desc 'Describe status here'
-arg_name 'Describe arguments to status here'
-command :status do |c|
-  c.action do |global_options,options,args|
-    puts "status command ran"
-  end
-end
-
 desc 'Describe list here'
 arg_name 'Describe arguments to list here'
 command :list do |c|
   c.action do |global_options,options,args|
-    applications = Applications.get_all    
-    applications.each_with_index do |app, ix|
-      puts Rainbow("#{app[:name]} ").send(COLORS[ix % COLORS.length]).underline 
-      puts "status: #{app[:status]}"
-      puts "pid: #{app[:pid]}" if app[:status] == :running
-      puts
+    App.all.each_with_index do |app, ix|
+      app.display(ix)
     end
-
   end
 end
 
@@ -104,23 +74,11 @@ desc 'kills selected app'
 arg_name 'provide an app name'
 command :kill do |c|
   c.action do |global_options,options,args|
-    if args.first == "all"
-      apps = Applications.get_all
-    elsif args.first
-      apps = Applications.get_all.select { |a| args.include?( a[:name] ) }
-    end
-    
-    apps.each do |app|
+    apps_from_args(args).each do |app|
       puts "No app with that name found" and return unless app
-      puts Rainbow("#{app[:name]} ").send(COLORS.shuffle.first) 
-      puts "status: #{app[:status]}"
-      # puts "pid: #{app[:pid]}"
-      if app[:status] == :running
-        Process.kill("HUP", app[:pid].to_i)
-        puts "kilt #{app[:name]}"
-      end
+      app.kill!
+      app.display
     end
-
     puts
   end
 end

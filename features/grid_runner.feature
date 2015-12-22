@@ -7,6 +7,6 @@ Feature: My bootstrapped app kinda works
     When I get help for "grid_runner"
     Then the exit status should be 0
 
-Scenario: Restart
+Scenario: list
     When I call "list" for "grid_runner"
     Then the exit status should be 0
