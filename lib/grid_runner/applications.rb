@@ -40,6 +40,7 @@ class App
 
   def kill!
     if status == :running
+      puts App.ps_out(name)
       Process.kill("HUP", pid.to_i)
       puts "kilt #{name}"
     end
@@ -50,17 +51,14 @@ class App
   end
 
   def run
-    # stdout, stderr, cmd_status = Open3.capture3(["echo"], command)        
     puts "running: #{name}"
-    io_write = IO.pipe[1]
     Process.spawn(
       ENV,
       command, 
       out: [log.path, "w"], 
-      err: [log.path, "w"], 
-      :in => "/dev/tty",
-      close_others: false
-    )
+      err: [log.path, "w"],
+      :in => "/dev/null"
+      )
   end
 
   def status
@@ -72,9 +70,10 @@ class App
   def self.ps_out(name)
     stdout, stderr, cmd_status = Open3.capture3("ps aux | grep #{name}")
     if cmd_status.success?
-      if p = stdout.split(/\n/).find {|l| l.match("sbt")}
+      # find processes that are either sbt or ES, and filter out the grep command itself
+      if p = stdout.split(/\n/).find {|l| (l.match("sbt") || l.match("elasticsearch")) && !l.match("grep") }
         proc_status = :running
-        pid = p.match(/\d{4,8}\s/)[0]
+        pid = p.match(/\d{1,8}\s/)[0]
       else
         proc_status = :not_running
       end
