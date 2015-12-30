@@ -52,7 +52,7 @@ class App
   end
 
   def run
-    puts Rainbow("running #{app.name}").green
+    puts Rainbow("running #{name}").green
 
     Process.spawn(
       ENV,
