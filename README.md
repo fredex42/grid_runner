@@ -3,15 +3,6 @@ Grid Runner
 
 A command line tool for running Grid microservices
 
-
-Commands
---------
-
-* ``` list ```
-* ``` run <APP_NAME || 'all' >  ```
-* ``` kill <APP_NAME || 'all' >  ```
-* ``` restart <APP_NAME || 'all' >  ```
-
 Install
 ------- 
 
@@ -22,6 +13,15 @@ Requirements
 ------------
 
 grid_runner uses a Procfile at the root of your project similar to [Foreman](https://github.com/ddollar/foreman)
+
+
+Commands
+--------
+
+* ``` grid_runner list ```
+* ``` grid_runner run <APP_NAME || 'all' >  ```
+* ``` grid_runner kill <APP_NAME || 'all' >  ```
+* ``` grid_runner restart <APP_NAME || 'all' >  ```
 
 
 Logs
