@@ -10,8 +10,7 @@ Commands
 * ``` list ```
 * ``` run <APP_NAME || 'all' >  ```
 * ``` kill <APP_NAME || 'all' >  ```
-
-
+* ``` restart <APP_NAME || 'all' >  ```
 
 Install
 ------- 

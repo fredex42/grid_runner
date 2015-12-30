@@ -66,8 +66,8 @@ command :kill do |c|
   c.action do |global_options,options,args|
     apps_from_args(args).each do |app|
       puts "No app with that name found" and return unless app
-      app.kill!
       app.display
+      app.kill!
     end
     puts
   end

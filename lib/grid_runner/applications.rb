@@ -1,3 +1,5 @@
+require 'open3'
+
 class App
   PROCFILE = File.open(Dir.pwd + "/Procfile")
   
@@ -40,9 +42,8 @@ class App
 
   def kill!
     if status == :running
-      puts App.ps_out(name)
       Process.kill("HUP", pid.to_i)
-      puts "kilt #{name}"
+      puts Rainbow("killing #{name}").red
     end
   end
 

@@ -10,9 +10,6 @@ spec = Gem::Specification.new do |s|
   s.files = `git ls-files`.split("
 ")
   s.require_paths << 'lib'
-  s.has_rdoc = true
-  s.extra_rdoc_files = ['README.rdoc','grid_runner.rdoc']
-  s.rdoc_options << '--title' << 'grid_runner' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
   s.executables << 'grid_runner'
   s.add_development_dependency('rake')
