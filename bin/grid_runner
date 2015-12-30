@@ -24,7 +24,12 @@ command :run do |c|
   c.flag :f
   c.action do |global_options,options,args|
     apps_from_args(args).each do |app|
-      app.run
+      if app.status == :running
+        puts Rainbow("#{app.name} already running!").red
+        puts 
+      else
+        app.run
+      end
     end
   end
 end
