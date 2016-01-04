@@ -1,7 +1,7 @@
 Grid Runner
 ===========
 
-A command line tool for running Grid microservices
+A command line tool for running Grid microservices:
 
 Install
 ------- 
@@ -30,3 +30,13 @@ Logs
 Currently grid_runner will put all logs in ./logs/APPNAME.log
 
 * To watch all logs I use ``` tail -f logs/* ```
+
+Other 
+-----
+
+I added "alias gr=grid_runner" to my .bash\_profile
+
+e.g. 
+
+* ``` gr run all ``` 
+* ``` gr list ``` 

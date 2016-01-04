@@ -16,12 +16,9 @@ def apps_from_args(args)
   return App.find(args) if args.first
 end
 
-desc 'Describe run'
-arg_name 'Describe arguments to run here'
+desc 'runs a given app listed in the Procfile (or all)'
+arg_name "app names separated by a SPACE or 'all'" 
 command :run do |c|
-  c.desc 'Describe a flag to run'
-  c.default_value 'default'
-  c.flag :f
   c.action do |global_options,options,args|
     apps_from_args(args).each do |app|
       if app.status == :running
@@ -34,7 +31,7 @@ command :run do |c|
   end
 end
 
-desc 'Describe restart'
+desc 'restarts a given app'
 arg_name "app names separated by a SPACE or 'all'" 
 command :restart do |c|
   c.action do |global_options,options,args|
@@ -55,8 +52,8 @@ command :restart do |c|
   end
 end
 
-desc 'Describe list here'
-arg_name 'Describe arguments to list here'
+desc 'prints the status of apps listed in Procfile'
+arg_name "app names separated by a SPACE or 'all'" 
 command :list do |c|
   c.action do |global_options,options,args|
     App.all.each_with_index do |app, ix|
