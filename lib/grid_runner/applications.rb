@@ -69,9 +69,9 @@ class App
 
   private
 
-  def self.app_process_from_grep(stdout)
+  def self.app_process_from_grep(stdout, name = nil)
     stdout.split(/\n/).find do |l| 
-      (l.match("sbt") || l.match("elasticsearch")) && 
+      l.match(name) && 
       !l.match("grep") && 
       !l.match("grid_runner")
     end
@@ -81,7 +81,7 @@ class App
     stdout, stderr, cmd_status = Open3.capture3("ps aux | grep #{name}")
     if cmd_status.success?
       # find processes that are either sbt or ES, and filter out the grep command itself
-      if p = app_process_from_grep(stdout)
+      if p = app_process_from_grep(stdout, name)
         proc_status = :running
         pid = p.match(/\d{1,8}\s/)[0]
       else
