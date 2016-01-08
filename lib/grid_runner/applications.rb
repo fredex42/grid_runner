@@ -19,6 +19,7 @@ class App
   end
 
   def self.find(args)
+    return unless args.first
     App.all.select { |app| args.include?( app.name ) }
   end
 
@@ -33,6 +34,7 @@ class App
   end
 
   def display(color_index = rand(0..COLORS.length))
+    puts
     puts Rainbow("#{name} ").send(COLORS[color_index % COLORS.length]).underline 
     puts "status: #{status}"
     puts "pid: #{pid}" if status == :running
