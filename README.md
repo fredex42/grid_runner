@@ -22,6 +22,7 @@ Commands
 * ``` grid_runner run <APP_NAME || 'all' >  ```
 * ``` grid_runner kill <APP_NAME || 'all' >  ```
 * ``` grid_runner restart <APP_NAME || 'all' >  ```
+* ``` grid_runner log <APP_NAME || 'all' >  ```
 
 
 Logs
@@ -29,7 +30,7 @@ Logs
 
 Currently grid_runner will put all logs in ./logs/APPNAME.log
 
-* To watch all logs I use ``` tail -f logs/* ```
+* To watch all logs use ``` grid_runner log all ```
 
 Other 
 -----
