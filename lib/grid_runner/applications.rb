@@ -28,7 +28,7 @@ class App
     cmd = line.split(":")[1]
     ps_out = ps_out(name)
     status = ps_out[:status]
-    pid = ps_out[:pid]
+    pid = ps_out[:pid].strip if ps_out[:pid]
 
     App.new(name, cmd, status, pid)
   end
@@ -44,6 +44,8 @@ class App
 
   def kill!
     if status == :running
+      # imgops wasnt working with HUP but did with 3 ('sigquit')
+      Process.kill(3, pid.to_i)
       Process.kill("HUP", pid.to_i)
       puts Rainbow("killing #{name}").red
     end
