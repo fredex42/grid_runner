@@ -13,19 +13,54 @@ arguments :strict
 
 def apps_from_args(args)
   return App.all if args.first == "all"
-  return App.find(args)
+  return App.find(args) unless args.empty?
 end
+
+desc 'lists apps that are running'
+command :running do |c|
+  c.action do |global_options,options,args|
+    running_apps = App.all.select { |a| a.status == :running}
+    if running_apps.empty?
+      puts Rainbow("No apps running").red
+    else
+      puts Rainbow("Running apps:").blue
+      puts Rainbow("#{running_apps.map(&:name)}").green
+    end
+  end
+end
+
+
+desc 'lists apps that are not running'
+command :not_running do |c|
+  c.action do |global_options,options,args|
+    not_running = App.all.reject { |a| a.status == :running}
+    puts Rainbow("All apps running").red and return if not_running.empty?
+    if not_running.empty?
+      puts Rainbow("All apps running").red
+    else
+      puts Rainbow("Not running:").red.underline.bright
+      puts Rainbow("#{not_running.map(&:name).join(", ")}").red
+    end
+  end
+end
+
+
 
 desc 'runs a given app listed in the Procfile (or all)'
 arg_name "app names separated by a SPACE or 'all'" 
 command :run do |c|
   c.action do |global_options,options,args|
-    apps_from_args(args).each do |app|
-      if app.status == :running
-        puts Rainbow("#{app.name} already running!").red
-        puts 
-      else
-        app.run
+    apps_to_run = apps_from_args(args)
+    if apps_to_run.empty? 
+      Rainbow("No app #{args.first} found in Procfile")
+    else
+      apps_to_run.each do |app|
+        if app.status == :running
+          puts Rainbow("#{app.name} already running!").red
+          puts 
+        else
+          app.run
+        end
       end
     end
   end
@@ -69,10 +104,9 @@ arg_name "app names separated by a SPACE or 'all'"
 command :log do |c|
   c.action do |global_options,options,args|
     apps = apps_from_args(args) || App.all
-    msg = "Logging: #{apps.map(&:name).join(", ")}"
     puts
-    puts Rainbow(msg).blue 
-    puts Rainbow(Array.new(msg.length, "-").join).red
+    puts Rainbow("Logging:").blue.underline #{apps.map(&:name).join(", ")}"
+    puts Rainbow("#{apps.map(&:name).join(', ')}").green
     app_logs = apps.flat_map(&:log).flat_map(&:path).join(" ")
     IO.popen("tail -f #{app_logs}") { |io| while (line = io.gets) do puts line end }  end
 end

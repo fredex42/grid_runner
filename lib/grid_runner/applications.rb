@@ -39,7 +39,6 @@ class App
     puts "status: #{status}"
     puts "pid: #{pid}" if status == :running
     puts "log: #{log.path}"
-    puts
   end
 
   def kill!
@@ -52,7 +51,7 @@ class App
   end
 
   def log
-    File.open((Dir.pwd + "/logs/" + "#{name}.log"), "w+")
+    File.open((Dir.pwd + "/logs/" + "#{name}.log"), "ab")
   end
 
   def run
@@ -77,6 +76,9 @@ class App
     stdout.split(/\n/).find do |l| 
       l.match(name) && 
       !l.match("grep") && 
+      !l.match("tail") &&
+      # for auth 
+      !l.match("MacOS") && 
       !l.match("grid_runner")
     end
   end

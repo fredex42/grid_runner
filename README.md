@@ -22,15 +22,20 @@ Commands
 * ``` grid_runner run <APP_NAME || 'all' >  ```
 * ``` grid_runner kill <APP_NAME || 'all' >  ```
 * ``` grid_runner restart <APP_NAME || 'all' >  ```
-* ``` grid_runner log <APP_NAME || 'all' >  ```
+* ``` grid_runner running ```
+* ``` grid_runner not_running ```
 
+All commands that take an app name can take a space delimited list of app names:
+
+e.g. 
+``` gr log media-api cropper thrall ```
 
 Logs
 ----
 
 Currently grid_runner will put all logs in ./logs/APPNAME.log
 
-* To watch all logs use ``` grid_runner log all ```
+* To watch all logs I use ``` tail -f logs/* ```
 
 Other 
 -----
