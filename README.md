@@ -8,6 +8,15 @@ Install
 
 ``` gem install grid_runner ```
 
+*** warning ***
+If you dont get the latest version (0.0.9)
+
+run: 
+``` gem uninstall grid_runner ```
+``` gem install grid_runner -v 0.0.9 ```
+
+not sure what i did to rubygems to bork this. but it was borked for me ^_^
+
 
 Requirements
 ------------
