@@ -2,7 +2,7 @@ require 'open3'
 
 class App
   PROCFILE = File.open(Dir.pwd + "/Procfile")
-  
+
   attr_reader :name, :command, :status, :pid
 
   def initialize(name, command, status, pid)
@@ -35,7 +35,7 @@ class App
 
   def display(color_index = rand(0..COLORS.length))
     puts
-    puts Rainbow("#{name} ").send(COLORS[color_index % COLORS.length]).underline 
+    puts Rainbow("#{name} ").send(COLORS[color_index % COLORS.length]).underline
     puts "status: #{status}"
     puts "pid: #{pid}" if status == :running
     puts "log: #{log.path}"
@@ -59,8 +59,8 @@ class App
 
     Process.spawn(
       ENV,
-      command, 
-      out: [log.path, "w"], 
+      command,
+      out: [log.path, "w"],
       err: [log.path, "w"],
       :in => "/dev/null"
       )
@@ -73,12 +73,12 @@ class App
   private
 
   def self.app_process_from_grep(stdout, name = nil)
-    stdout.split(/\n/).find do |l| 
-      l.match(name) && 
-      !l.match("grep") && 
+    stdout.split(/\n/).find do |l|
+      l.match(name) &&
+      !l.match("grep") &&
       !l.match("tail") &&
-      # for auth 
-      !l.match("MacOS") && 
+      # for auth
+      !l.match("MacOS") &&
       !l.match("grid_runner")
     end
   end
